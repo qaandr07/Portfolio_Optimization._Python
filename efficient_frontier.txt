@@ -1,0 +1,15 @@
+efficient_frontier.py
+В этом файле строится эффективная граница портфелей.
+
+Основные функции:
+- calculate_portfolio_return() — считает доходность портфеля по его весам.
+- calculate_portfolio_risk() — считает риск портфеля.
+- minimize_portfolio_risk_for_target_return() — подбирает веса с минимальным риском для заданной доходности.
+- calculate_long_only_frontier() — строит эффективную границу без short selling.
+- build_efficient_frontier() — запускает расчёт и строит график.
+
+Граница строится с ограничениями:
+0 <= weight <= 1
+sum(weights) = 1, то есть без шорта.
+
+Этот файл отвечает за четвёртую фичу проекта: Efficient Frontier.
