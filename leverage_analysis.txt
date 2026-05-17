@@ -1,0 +1,23 @@
+This module implements the part 7 leverage feature.
+
+Main functions:
+- build_leveraged_portfolio_returns
+- analyze_leverage
+
+Inputs:
+- tangency portfolio daily returns
+- leverage_ratio
+- risk_free_rate
+
+Outputs:
+- leveraged daily returns
+- leveraged cumulative returns
+- annualized leverage metrics
+- optional comparison plot
+
+Dependencies:
+- project_config.py
+- common_utils.py
+
+Example:
+- leverage = analyze_leverage(simulation, key_portfolios, leverage_ratio=2.0)

@@ -1,6 +1,8 @@
+from enum import Enum
+
+import numpy as np
 import pandas as pd
 import yfinance as yf
-from enum import Enum
 
 from project_config import (
     ACTIVE_ASSETS,
@@ -84,8 +86,29 @@ def download_open_prices(
 
     price_data = price_data[asset_tickers]
     price_data.columns = asset_names
+    price_data = price_data.replace([np.inf, -np.inf], np.nan)
 
-    daily_returns = price_data.pct_change().dropna(how="all")
+    empty_columns = [
+        column
+        for column in price_data.columns
+        if price_data[column].dropna().empty
+    ]
+    if empty_columns:
+        raise ValueError(
+            f"No price history found for assets: {', '.join(empty_columns)}"
+        )
+
+    daily_returns = (
+        price_data
+        .pct_change(fill_method=None)
+        .replace([np.inf, -np.inf], np.nan)
+        .dropna(how="all")
+    )
+    if daily_returns.empty:
+        raise ValueError(
+            "Not enough data to calculate daily returns for the selected assets."
+        )
+
     return raw_data, price_data, daily_returns
 
 

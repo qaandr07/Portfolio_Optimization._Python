@@ -1,0 +1,23 @@
+This module implements the part 9 Kelly Criterion feature.
+
+Main function:
+- analyze_kelly
+
+Inputs:
+- simulation dictionary
+- key_portfolios dictionary
+- risk_free_rate
+- fixed_leverage_ratio
+- max_leverage
+
+Outputs:
+- recommended Kelly leverage
+- leveraged daily and cumulative returns
+- optional comparison plot
+
+Dependencies:
+- leverage_analysis.py
+- project_config.py
+
+Example:
+- kelly = analyze_kelly(simulation, key_portfolios, max_leverage=3.0)

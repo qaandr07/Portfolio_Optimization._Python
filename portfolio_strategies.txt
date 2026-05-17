@@ -1,0 +1,23 @@
+This module implements the part 5 portfolio selection logic.
+
+Main functions:
+- project_to_simplex
+- evaluate_portfolio
+- refine_long_only_weights
+- build_equal_weight_portfolio
+- analyze_key_portfolios
+
+Inputs:
+- simulation dictionary from portfolio_simulation.py
+- frontier dictionary from efficient_frontier.py
+
+Outputs:
+- dictionaries for Tangency, Min Variance, Max Sortino and Equal Weight portfolios
+- optional visualization of optimal portfolios on the risk-return chart
+
+Dependencies:
+- common_utils.py
+- project_config.py
+
+Example:
+- key_portfolios = analyze_key_portfolios(simulation, frontier)
