@@ -6,3 +6,4 @@ yfinance
 scipy
 PyPortfolioOpt
 quantstats
+streamlit
