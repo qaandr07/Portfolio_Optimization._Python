@@ -19,12 +19,22 @@ def simulate_random_portfolios(
     title=None,
     **scatter_kwargs,
 ):
-    aligned_returns = select_frame(daily_returns, *assets).dropna()
+    aligned_returns = (
+        select_frame(daily_returns, *assets)
+        .replace([np.inf, -np.inf], np.nan)
+        .dropna()
+    )
     asset_names = aligned_returns.columns.tolist()
     num_assets = len(asset_names)
 
+    if num_assets == 0 or aligned_returns.empty:
+        raise ValueError(
+            "No aligned daily returns available for portfolio simulation."
+        )
+
     annual_mean_returns = aligned_returns.mean() * trading_days
     annual_cov_matrix = aligned_returns.cov() * trading_days
+    risk_free_daily = risk_free_rate / trading_days
 
     random_generator = np.random.default_rng(random_state)
     portfolio_weights = random_generator.random((num_portfolios, num_assets))
@@ -47,6 +57,19 @@ def simulate_random_portfolios(
         where=portfolio_risks != 0,
     )
 
+    portfolio_daily_returns = aligned_returns.to_numpy() @ portfolio_weights.T
+    downside_returns = np.minimum(portfolio_daily_returns - risk_free_daily, 0)
+    downside_deviation = (
+        np.sqrt(np.mean(downside_returns ** 2, axis=0))
+        * np.sqrt(trading_days)
+    )
+    portfolio_sortinos = np.divide(
+        portfolio_returns - risk_free_rate,
+        downside_deviation,
+        out=np.zeros_like(portfolio_returns),
+        where=downside_deviation != 0,
+    )
+
     simulation = {
         "asset_names": asset_names,
         "num_assets": num_assets,
@@ -56,8 +79,11 @@ def simulate_random_portfolios(
         "portfolio_returns": portfolio_returns,
         "portfolio_risks": portfolio_risks,
         "portfolio_sharpes": portfolio_sharpes,
+        "portfolio_sortinos": portfolio_sortinos,
         "portfolio_weights": portfolio_weights,
+        "portfolio_daily_returns": portfolio_daily_returns,
         "risk_free_rate": risk_free_rate,
+        "risk_free_daily": risk_free_daily,
         "num_portfolios": num_portfolios,
     }
 
@@ -82,7 +108,10 @@ def simulate_random_portfolios(
         plt.show()
 
     print("#part 3")
-    print(f"Generated {num_portfolios} random portfolios.")
+    print(
+        f"Generated {num_portfolios} portfolios. "
+        f"Best Sharpe: {round(float(portfolio_sharpes.max()), 3)}"
+    )
     print(
         f"Risk range: "
         f"{format_percent(float(portfolio_risks.min()))} .. "

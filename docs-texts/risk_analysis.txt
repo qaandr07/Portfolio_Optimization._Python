@@ -1,0 +1,23 @@
+This module implements the part 10 risk analysis feature.
+
+Main functions:
+- max_drawdown
+- calculate_strategy_metrics
+- analyze_drawdowns
+
+Inputs:
+- backtest results
+- optional extra strategy returns
+- risk_free_rate
+
+Outputs:
+- drawdown series
+- cumulative return series
+- metrics table with return, volatility, Sharpe, Sortino, Calmar and Max Drawdown
+- optional drawdown plot
+
+Dependencies:
+- project_config.py
+
+Example:
+- drawdowns = analyze_drawdowns(backtest, risk_free_rate=0.0)
